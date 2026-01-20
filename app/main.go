@@ -5,9 +5,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
-	"github.com/facktoreal/ip/app/lib/controllers"
-	"github.com/facktoreal/ip/app/lib/providers/mock"
-	"github.com/facktoreal/ip/app/lib/services"
+	"github.com/facktoreal/ip/lib/controllers"
+	"github.com/facktoreal/ip/lib/providers/mock"
+	"github.com/facktoreal/ip/lib/services"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 		e.Logger.Fatalf("Unable to load environment variables, err: %s", err.Error())
 	}
 
-	port := env.MustGetString("PORT")
+	port := env.MayGetString("PORT")
 	if port == "" {
 		port = "8080"
 		e.Logger.Infof("Defaulting to port %s", port)
@@ -41,6 +41,7 @@ func main() {
 
 	// Core
 	controllers.NewHealthController(healthSrv, statsSrv).Routes(e.Group("api"))
+	controllers.NewDefaultController().Routes(e.Group("/"))
 
 	e.Logger.Infof("Server started, v%s | port: %s", echo.Version, port)
 	e.Logger.Fatal(e.Start(":" + port))

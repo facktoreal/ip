@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/facktoreal/ip/app/lib/providers/mock"
-	"github.com/facktoreal/ip/app/lib/repositories"
+	"github.com/facktoreal/ip/lib/providers/mock"
+	"github.com/facktoreal/ip/lib/repositories"
 )
 
 func TestMock_Health_NewHealthRepository(t *testing.T) {

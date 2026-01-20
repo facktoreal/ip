@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 
-	"github.com/facktoreal/ip/app/lib/repositories"
+	"github.com/facktoreal/ip/lib/repositories"
 )
 
 type healthService struct {

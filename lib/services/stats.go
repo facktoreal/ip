@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/facktoreal/ip/app/lib/models"
+	"github.com/facktoreal/ip/lib/models"
 )
 
 type statsService struct {

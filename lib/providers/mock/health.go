@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 
-	"github.com/facktoreal/ip/app/lib/repositories"
+	"github.com/facktoreal/ip/lib/repositories"
 )
 
 // NewHealthRepository ...

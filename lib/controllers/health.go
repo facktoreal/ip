@@ -7,8 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stiks/helpers"
 
-	"github.com/facktoreal/ip/app/lib/models"
-	"github.com/facktoreal/ip/app/lib/services"
+	"github.com/facktoreal/ip/lib/models"
+	services2 "github.com/facktoreal/ip/lib/services"
 )
 
 // HealthControllerInterface ...
@@ -18,12 +18,12 @@ type HealthControllerInterface interface {
 }
 
 type healthController struct {
-	health services.HealthService
-	stats  services.StatsService
+	health services2.HealthService
+	stats  services2.StatsService
 }
 
 // NewHealthController returns a controller
-func NewHealthController(healthSrv services.HealthService, statsSrv services.StatsService) HealthControllerInterface {
+func NewHealthController(healthSrv services2.HealthService, statsSrv services2.StatsService) HealthControllerInterface {
 	return &healthController{
 		health: healthSrv,
 		stats:  statsSrv,
