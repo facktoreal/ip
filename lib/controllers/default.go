@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/facktoreal/env"
 	"github.com/labstack/echo/v4"
 
 	"github.com/facktoreal/ip/lib/models"
@@ -16,13 +17,15 @@ type DefaultControllerInterface interface {
 }
 
 type defaultController struct {
-	stats services.StatsService
+	stats    services.StatsService
+	hostname string
 }
 
 // NewDefaultController returns a controller
 func NewDefaultController(stats services.StatsService) DefaultControllerInterface {
 	return &defaultController{
-		stats: stats,
+		stats:    stats,
+		hostname: env.MustGetString("HOSTNAME"),
 	}
 }
 
@@ -44,14 +47,32 @@ func (ctl *defaultController) Routes(g *echo.Group) {
 func (ctl *defaultController) Public(c echo.Context) error {
 	ip := c.RealIP()
 
-	if c.Request().Header.Get("Accept") == "application/json" {
+	if c.Request().Header.Get("Accept") == "application/json" || c.QueryParam("format") == "json" || c.QueryParam("json") != "" {
 		return c.JSON(http.StatusOK, models.PublicIpResponse{IP: ip})
+	}
+
+	if c.Request().Header.Get("Accept") == "application/xml" || c.QueryParam("format") == "xml" || c.QueryParam("xml") != "" {
+		return c.XML(http.StatusOK, models.PublicIpResponse{IP: ip})
+	}
+
+	if c.Request().Header.Get("Accept") == "text/plain" || c.QueryParam("format") == "text" || c.QueryParam("plain") != "" {
+		return c.String(http.StatusOK, ip)
 	}
 
 	stats := ctl.stats.Get(c.Request().Context())
 
+	// add backup for empty hostname
+	if ctl.hostname == "" {
+		ctl.hostname = c.Request().Host
+	}
+
+	if ctl.hostname[len(ctl.hostname)-1] != '/' {
+		ctl.hostname += "/"
+	}
+
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
-		"IP":     ip,
-		"Uptime": stats.Uptime.Format("2006-01-02 15:04:05"),
+		"IP":       ip,
+		"HOSTNAME": ctl.hostname,
+		"Uptime":   stats.Uptime.Format("2006-01-02 15:04:05"),
 	})
 }

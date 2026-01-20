@@ -7,6 +7,7 @@ main: ./app
 env_variables:
   ENV: production
   RELEASE: __RELEASE__
+  PUBLIC_URL: https://clean-ip.nw.r.appspot.com
 
 handlers:
 - url: /favicon.svg

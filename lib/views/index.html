@@ -15,8 +15,26 @@
             <span class="text-3xl md:text-4xl font-mono font-bold text-blue-600 break-all">{{ .IP }}</span>
         </div>
 
-        <div class="text-sm text-gray-500">
+        <div class="text-sm text-gray-500 mb-8">
             <p>Uptime: {{ .Uptime }}</p>
+        </div>
+
+        <div class="text-left mb-8">
+            <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Usage</h2>
+            <div class="space-y-3">
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Get IP as plain text:</p>
+                    <code class="block bg-gray-800 text-gray-200 p-2 rounded text-xs">curl "{{ .HOSTNAME }}?format=text"</code>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Force JSON response:</p>
+                    <code class="block bg-gray-800 text-gray-200 p-2 rounded text-xs">curl "{{ .HOSTNAME }}?format=json"</code>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 mb-1">Force XML response:</p>
+                    <code class="block bg-gray-800 text-gray-200 p-2 rounded text-xs">curl "{{ .HOSTNAME }}?format=xml"</code>
+                </div>
+            </div>
         </div>
 
         <div class="mt-8 pt-6 border-t border-gray-100 flex justify-center space-x-4">

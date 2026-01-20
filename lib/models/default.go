@@ -1,5 +1,5 @@
 package models
 
 type PublicIpResponse struct {
-	IP string `json:"ip"`
+	IP string `json:"ip" xml:"ip"`
 }
