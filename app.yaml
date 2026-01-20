@@ -1,0 +1,21 @@
+runtime: go125
+default_expiration: "10m"
+instance_class: F1
+
+main: ./app
+
+env_variables:
+  ENV: production
+  RELEASE: __RELEASE__
+
+handlers:
+  - url: /.*
+    script: auto
+    secure: always
+
+automatic_scaling:
+  min_idle_instances: 0
+  max_idle_instances: 1
+  min_pending_latency: 8s
+  max_pending_latency: 12s
+  max_concurrent_requests: 200
