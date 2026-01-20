@@ -25,7 +25,7 @@ type defaultController struct {
 func NewDefaultController(stats services.StatsService) DefaultControllerInterface {
 	return &defaultController{
 		stats:    stats,
-		hostname: env.MustGetString("HOSTNAME"),
+		hostname: env.MayGetString("HOSTNAME"),
 	}
 }
 
@@ -66,7 +66,7 @@ func (ctl *defaultController) Public(c echo.Context) error {
 		ctl.hostname = c.Request().Host
 	}
 
-	if ctl.hostname[len(ctl.hostname)-1] != '/' {
+	if ctl.hostname != "" && ctl.hostname[len(ctl.hostname)-1] != '/' {
 		ctl.hostname += "/"
 	}
 

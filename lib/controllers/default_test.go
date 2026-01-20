@@ -11,7 +11,18 @@ import (
 
 	"github.com/facktoreal/ip/lib/controllers"
 	"github.com/facktoreal/ip/lib/services"
+	"github.com/facktoreal/ip/lib/views"
+	"html/template"
+	"io"
 )
+
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
 
 func TestDefaultController_Public(t *testing.T) {
 	// Setup
@@ -19,6 +30,9 @@ func TestDefaultController_Public(t *testing.T) {
 	defer os.Unsetenv("HOSTNAME")
 
 	e := echo.New()
+	e.Renderer = &Template{
+		templates: template.Must(template.New("index.html").Parse(views.DefaultLayout)),
+	}
 	statsSrv := services.NewStatsService()
 	ctl := controllers.NewDefaultController(statsSrv)
 
@@ -78,6 +92,18 @@ func TestDefaultController_Public(t *testing.T) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			// RemoteAddr is empty in httptest.NewRequest by default, but RealIP() handles it
 			assert.NotEmpty(t, rec.Body.String())
+		}
+	})
+
+	t.Run("HTML response (default)", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+
+		if assert.NoError(t, ctl.Public(c)) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Contains(t, rec.Body.String(), "<!DOCTYPE html>")
+			assert.Contains(t, rec.Body.String(), "Your Public IP Address")
 		}
 	})
 }

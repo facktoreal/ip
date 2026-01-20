@@ -1,3 +1,6 @@
+package views
+
+var DefaultLayout = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center border-t-4 border-blue-500">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-xl w-full text-center border-t-4 border-blue-500">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Your Public IP Address</h1>
         
         <div class="bg-gray-50 p-6 rounded-md border border-gray-200 mb-6">
@@ -48,4 +51,4 @@
         </div>
     </div>
 </body>
-</html>
+</html>`

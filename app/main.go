@@ -11,6 +11,7 @@ import (
 	"github.com/facktoreal/ip/lib/controllers"
 	"github.com/facktoreal/ip/lib/providers/mock"
 	"github.com/facktoreal/ip/lib/services"
+	"github.com/facktoreal/ip/lib/views"
 )
 
 type Template struct {
@@ -24,10 +25,9 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func main() {
 	e := echo.New()
 
-	renderer := &Template{
-		templates: template.Must(template.ParseGlob("lib/views/*.html")),
+	e.Renderer = &Template{
+		templates: template.Must(template.New("index.html").Parse(views.DefaultLayout)),
 	}
-	e.Renderer = renderer
 
 	// Hide banner
 	e.HideBanner = true
