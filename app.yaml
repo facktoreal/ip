@@ -9,9 +9,13 @@ env_variables:
   RELEASE: __RELEASE__
 
 handlers:
-  - url: /.*
-    script: auto
-    secure: always
+- url: /favicon.svg
+  static_files: static/favicon.svg
+  upload: static/favicon.svg
+
+- url: /.*
+  script: auto
+  secure: always
 
 automatic_scaling:
   min_idle_instances: 0
