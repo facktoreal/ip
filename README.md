@@ -10,7 +10,7 @@ Default response is JSON with IP address.
 
 TODO:
 - [ ] Add support for IPv6 vs IPv4
-- [ ] Add support for other formats (html, xml)
+- [x] Add support for other formats (html, xml)
 - [ ] Add support for ISP detection
 - [ ] Add support for VPN detection
 - [ ] Add support for proxy detection
