@@ -1,6 +1,9 @@
 package main
 
 import (
+	"html/template"
+	"io"
+
 	"github.com/facktoreal/env"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -10,8 +13,21 @@ import (
 	"github.com/facktoreal/ip/lib/services"
 )
 
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
 func main() {
 	e := echo.New()
+
+	renderer := &Template{
+		templates: template.Must(template.ParseGlob("lib/views/*.html")),
+	}
+	e.Renderer = renderer
 
 	// Hide banner
 	e.HideBanner = true
@@ -41,7 +57,9 @@ func main() {
 
 	// Core
 	controllers.NewHealthController(healthSrv, statsSrv).Routes(e.Group("api"))
-	controllers.NewDefaultController().Routes(e.Group(""))
+	controllers.NewDefaultController(statsSrv).Routes(e.Group(""))
+
+	e.Static("/static", "static")
 
 	e.Logger.Infof("Server started, v%s | port: %s", echo.Version, port)
 	e.Logger.Fatal(e.Start(":" + port))

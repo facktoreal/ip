@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/facktoreal/ip/lib/models"
+	"github.com/facktoreal/ip/lib/services"
 )
 
 // DefaultControllerInterface ...
@@ -15,11 +16,14 @@ type DefaultControllerInterface interface {
 }
 
 type defaultController struct {
+	stats services.StatsService
 }
 
 // NewDefaultController returns a controller
-func NewDefaultController() DefaultControllerInterface {
-	return &defaultController{}
+func NewDefaultController(stats services.StatsService) DefaultControllerInterface {
+	return &defaultController{
+		stats: stats,
+	}
 }
 
 // Routes registers routes
@@ -38,6 +42,16 @@ func (ctl *defaultController) Routes(g *echo.Group) {
 // @Failure 500 {object} echo.HTTPError
 // @Router / [get]
 func (ctl *defaultController) Public(c echo.Context) error {
+	ip := c.RealIP()
 
-	return c.JSON(http.StatusOK, models.PublicIpResponse{IP: c.RealIP()})
+	if c.Request().Header.Get("Accept") == "application/json" {
+		return c.JSON(http.StatusOK, models.PublicIpResponse{IP: ip})
+	}
+
+	stats := ctl.stats.Get(c.Request().Context())
+
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+		"IP":     ip,
+		"Uptime": stats.Uptime.Format("2006-01-02 15:04:05"),
+	})
 }
