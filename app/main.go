@@ -41,7 +41,7 @@ func main() {
 
 	// Core
 	controllers.NewHealthController(healthSrv, statsSrv).Routes(e.Group("api"))
-	controllers.NewDefaultController().Routes(e.Group("/"))
+	controllers.NewDefaultController().Routes(e.Group(""))
 
 	e.Logger.Infof("Server started, v%s | port: %s", echo.Version, port)
 	e.Logger.Fatal(e.Start(":" + port))
