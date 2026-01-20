@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/facktoreal/env"
 	"github.com/labstack/echo/v4"
 	"github.com/stiks/helpers"
 
@@ -18,15 +19,19 @@ type HealthControllerInterface interface {
 }
 
 type healthController struct {
-	health services2.HealthService
-	stats  services2.StatsService
+	health   services2.HealthService
+	stats    services2.StatsService
+	version  string
+	instance string
 }
 
 // NewHealthController returns a controller
 func NewHealthController(healthSrv services2.HealthService, statsSrv services2.StatsService) HealthControllerInterface {
 	return &healthController{
-		health: healthSrv,
-		stats:  statsSrv,
+		health:   healthSrv,
+		stats:    statsSrv,
+		version:  env.MayGetString("RELEASE"),
+		instance: env.MayGetString("ENV"),
 	}
 }
 
@@ -55,7 +60,9 @@ func (ctl *healthController) HealthCheck(c echo.Context) error {
 	stats := ctl.stats.Get(ctx)
 
 	return c.JSON(http.StatusOK, models.Health{
-		Healthy: true,
-		Uptime:  helpers.DurationToString(time.Now().Sub(stats.Uptime)),
+		Healthy:  true,
+		Version:  ctl.version,
+		Instance: ctl.instance,
+		Uptime:   helpers.DurationToString(time.Now().Sub(stats.Uptime)),
 	})
 }
